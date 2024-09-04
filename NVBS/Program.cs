@@ -16,7 +16,8 @@ var map = new NVBSMap
       { "Byte", (NVBSByte) 255},
       {"Example2", (NVBSString)"exampled" }
     }
-  }) }
+  }) 
+  }
 };
 var stream = File.OpenWrite("asd.nvbs");
 new NVBSWriter(new BinaryWriter(stream)).Write(map);

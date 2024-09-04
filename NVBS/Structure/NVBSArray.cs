@@ -17,9 +17,10 @@ namespace NVBS.Structure
 		{
 
 		}
-		public NVBSArray(NVBSObject[] array)
+
+		public NVBSArray(params NVBSObject[] array)
 		{
-			AddRange(array);
+			AddRange(array.ToArray());
 		}
 
 		public void AddRange(NVBSObject[] array)
