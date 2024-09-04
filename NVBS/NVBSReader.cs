@@ -5,7 +5,7 @@ namespace NVBS
 {
 	public class NVBSReader
 	{
-		private BinaryReader Reader;
+		private readonly BinaryReader Reader;
 		public NVBSReader(BinaryReader reader)
 		{
 			Reader = reader;
@@ -16,7 +16,7 @@ namespace NVBS
 		{
 			return (NVBSMap)Read(Types.Map);
 		}
-
+		//Read Type then devide how to read it
 		private NVBSObject Read(Types type)
 		{
 			switch (type) {
@@ -38,35 +38,38 @@ namespace NVBS
 					return new NVBSLong(Reader.ReadInt64());
 				case Types.Int:
 					return new NVBSInt(Reader.ReadInt32());
+				default: {
+					Console.WriteLine("Unknown type: " + type);
+					return null;
+				}
 			}
-			return null;
-
 		}
-
+		//Read Map Type	
 		private NVBSMap readMap()
 		{
 			var map = new NVBSMap();
 			while (true)
 			{
-				Console.WriteLine((Types)Reader.PeekChar());
 				Types type = (Types)Reader.ReadByte();
 				if (type == Types.End) break;
-				string name = Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadInt16()));
+				string name = Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadUInt16()));
 				NVBSObject value = Read(type);
 				if (value == null) break;
 				map.Add(name,value);
 			}
 			return map;
 		}
+		//read String Type
 		private NVBSString readString()
 		{
-			return new NVBSString(Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadInt16())));
+			return new NVBSString(Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadUInt16())));
 		}
+		//Read Array Type
 		private NVBSArray readArray()
 		{
 			NVBSArray array = new NVBSArray();
 			Types type = (Types)Reader.ReadByte();
-			short count = Reader.ReadInt16();
+			ushort count = Reader.ReadUInt16();
 			
 			for (short i = 0; i < count; i++) {
 				array.Add(Read(type));

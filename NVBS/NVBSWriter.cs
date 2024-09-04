@@ -1,18 +1,16 @@
-﻿using System;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System.Text;
 using NVBS.Structure;
 
 namespace NVBS
 {
 	public class NVBSWriter
 	{
-		private BinaryWriter Writer;
+		private readonly BinaryWriter Writer;
 		public NVBSWriter(BinaryWriter writer)
 		{
 			Writer = writer;
 		}
+		//Write Type then devide how to write it
 		public void Write(NVBSObject obj) {
 			switch (obj.Type) {
 				case Types.String:
@@ -45,25 +43,28 @@ namespace NVBS
 			}
 
 		}
+		//Write Map Type
 		private void writeMap(NVBSMap obj)
 		{
 			foreach(var item in obj) {
 				Writer.Write((byte)item.Value.Type);
-				Writer.Write((short)item.Key.Length);
+				Writer.Write((ushort)item.Key.Length);
 				Writer.Write(Encoding.UTF8.GetBytes(item.Key));
 				Write(item.Value);
 			}
 			Writer.Write((byte)Types.End);
 		}
+		//Write String Type
 		private void writeString(NVBSString obj)
 		{
-			Writer.Write((short)obj.Data.Length);
+			Writer.Write((ushort)obj.Data.Length);
 			Writer.Write(Encoding.UTF8.GetBytes(obj.Data));
 		}
+		//Write Array Type
 		private void writeArray(NVBSArray obj, byte type)
 		{
 			Writer.Write(type);
-			Writer.Write((short)obj.Count);
+			Writer.Write((ushort)obj.Count);
 			foreach (var item in obj) {
 				Write(item);
 			}
