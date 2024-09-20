@@ -13,31 +13,31 @@ namespace NVBS
 		//Write Type then devide how to write it
 		public void Write(NVBSObject obj) {
 			switch (obj.Type) {
-				case Types.String:
+				case NVBSTypes.String:
 					writeString((NVBSString)obj);
 					break;
-				case Types.Array:
+				case NVBSTypes.Array:
 					writeArray((NVBSArray)obj, (byte)((NVBSArray)obj).First().Type);
 					break;
-				case Types.Map:
+				case NVBSTypes.Map:
 					writeMap((NVBSMap)obj);
 					break;
-				case Types.Byte:
+				case NVBSTypes.Byte:
 					Writer.Write(((NVBSByte)obj).Data);
 					break;
-				case Types.Short:
+				case NVBSTypes.Short:
 					Writer.Write(((NVBSShort)obj).Data);
 					break;
-				case Types.Double:
+				case NVBSTypes.Double:
 					Writer.Write(((NVBSDouble)obj).Data);
 					break;
-				case Types.Float:
+				case NVBSTypes.Float:
 					Writer.Write(((NVBSFloat)obj).Data);
 					break;
-				case Types.Long:
+				case NVBSTypes.Long:
 					Writer.Write(((NVBSLong)obj).Data);
 					break;
-				case Types.Int:
+				case NVBSTypes.Int:
 					Writer.Write(((NVBSInt)obj).Data);
 					break;
 			}
@@ -52,7 +52,7 @@ namespace NVBS
 				Writer.Write(Encoding.UTF8.GetBytes(item.Key));
 				Write(item.Value);
 			}
-			Writer.Write((byte)Types.End);
+			Writer.Write((byte)NVBSTypes.End);
 		}
 		//Write String Type
 		private void writeString(NVBSString obj)

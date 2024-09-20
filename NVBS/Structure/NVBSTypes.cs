@@ -1,7 +1,7 @@
 ﻿using System;
 namespace NVBS.Structure
 {
-	public enum Types : byte
+	public enum NVBSTypes : byte
 	{
 		End = 0xFF,
 		String = 0xAA,

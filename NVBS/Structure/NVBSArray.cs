@@ -6,42 +6,41 @@ namespace NVBS.Structure
 {
 	public sealed class NVBSArray : NVBSObject, ICollection<NVBSObject>
 	{
-		public List<NVBSObject> Data = new List<NVBSObject>();
+		private readonly List<NVBSObject> _data = new List<NVBSObject>();
 
-		public int Count { get { return Data.Count; } }
-		
+		public int Count => _data.Count;
+
 		public void Add(NVBSObject item) {
-			Data.Add(item);
-		}
-		public NVBSArray()
-		{
-
+			_data.Add(item);
 		}
 
-		public NVBSArray(params NVBSObject[] array)
-		{
-			AddRange(array.ToArray());
+		public NVBSArray(params NVBSObject[] array) {
+			NVBSObject first = array.First();
+			foreach (var item in array)
+			{
+				if(item.Type != first.Type)
+				{
+					throw new Exception("All items in an array must be of the same type");
+				}
+				Add(item);
+				
+			}
 		}
 
-		public void AddRange(NVBSObject[] array)
-		{
-			Data.AddRange(array);
-		}
+		public void Clear() { _data.Clear(); }
 
-		public void Clear() { Data.Clear(); }
+		public bool Contains(NVBSObject item) { return _data.Contains(item); }
 
-		public bool Contains(NVBSObject item) { return Data.Contains(item); }
-
-		public void CopyTo(NVBSObject[] array, int arrayIndex) { Data.CopyTo(array, arrayIndex); }
+		public void CopyTo(NVBSObject[] array, int arrayIndex) { _data.CopyTo(array, arrayIndex); }
 
 		public bool Remove(NVBSObject item)
 		{
-			return true;
+			return _data.Remove(item);
 		}
 
 		bool ICollection<NVBSObject>.IsReadOnly => false;
 
-		public override Types Type => Types.Array;
+		public override NVBSTypes Type => NVBSTypes.Array;
 
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -49,14 +48,9 @@ namespace NVBS.Structure
 			return GetEnumerator();
 		}
 
-		public void CopyTo(NVBSObject array, int index)
-		{
-			CopyTo(array, index);
-		}
-
 		public IEnumerator<NVBSObject> GetEnumerator()
 		{
-			return Data.GetEnumerator();
+			return _data.GetEnumerator();
 		}
 	}
 }

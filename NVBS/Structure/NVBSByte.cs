@@ -3,10 +3,8 @@ namespace NVBS.Structure
 {
 	public sealed class NVBSByte : NVBSObject
 	{
-		public byte Data;
-		public override Types Type {
-			get { return Types.Byte; }
-		}
+		public readonly byte Data;
+		public override NVBSTypes Type => NVBSTypes.Byte;
 
 		public static implicit operator NVBSByte(byte value)
 		{
@@ -16,6 +14,21 @@ namespace NVBS.Structure
 		public NVBSByte(byte data)
 		{
 			Data = data;
+		}
+		
+		public override bool Equals(object? obj) {
+			if (obj is NVBSByte byt) {
+				return byt.Data == Data;
+			}
+			return false;
+		}
+		
+		public override string ToString() {
+			return Data.ToString();
+		}
+		
+		public override int GetHashCode() {
+			return Data.GetHashCode();
 		}
 	}
 }

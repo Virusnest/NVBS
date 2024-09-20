@@ -14,29 +14,29 @@ namespace NVBS
 
 		public NVBSMap Read()
 		{
-			return (NVBSMap)Read(Types.Map);
+			return (NVBSMap)Read(NVBSTypes.Map);
 		}
 		//Read Type then devide how to read it
-		private NVBSObject Read(Types type)
+		private NVBSObject Read(NVBSTypes type)
 		{
 			switch (type) {
-				case Types.String:
+				case NVBSTypes.String:
 					return readString();
-				case Types.Array:
+				case NVBSTypes.Array:
 					return readArray();
-				case Types.Map:
+				case NVBSTypes.Map:
 					return readMap();
-				case Types.Byte:
+				case NVBSTypes.Byte:
 					return new NVBSByte(Reader.ReadByte());
-				case Types.Short:
+				case NVBSTypes.Short:
 					return new NVBSShort(Reader.ReadInt16());
-				case Types.Double:
+				case NVBSTypes.Double:
 					return new NVBSDouble(Reader.ReadDouble());
-				case Types.Float:
+				case NVBSTypes.Float:
 					return new NVBSFloat(Reader.ReadSingle());
-				case Types.Long:
+				case NVBSTypes.Long:
 					return new NVBSLong(Reader.ReadInt64());
-				case Types.Int:
+				case NVBSTypes.Int:
 					return new NVBSInt(Reader.ReadInt32());
 				default: {
 					Console.WriteLine("Unknown type: " + type);
@@ -50,8 +50,8 @@ namespace NVBS
 			var map = new NVBSMap();
 			while (true)
 			{
-				Types type = (Types)Reader.ReadByte();
-				if (type == Types.End) break;
+				NVBSTypes type = (NVBSTypes)Reader.ReadByte();
+				if (type == NVBSTypes.End) break;
 				string name = Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadUInt16()));
 				NVBSObject value = Read(type);
 				if (value == null) break;
@@ -68,7 +68,7 @@ namespace NVBS
 		private NVBSArray readArray()
 		{
 			NVBSArray array = new NVBSArray();
-			Types type = (Types)Reader.ReadByte();
+			NVBSTypes type = (NVBSTypes)Reader.ReadByte();
 			ushort count = Reader.ReadUInt16();
 			
 			for (short i = 0; i < count; i++) {
