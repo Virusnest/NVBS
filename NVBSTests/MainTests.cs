@@ -4,22 +4,26 @@ using NVBS.Structure;
 namespace NVBSTests;
 
 public class NVBSTests {
-  public static NVBSMap Map = new() {
-    {"Test", new NVBSString("value")},
-    {"Test2", new NVBSInt(1)},
-    {"TestMap", new NVBSMap {
-      { "Test", new NVBSString("value") },
-      { "Test2", new NVBSInt(2) }, {
-        "Test3", new NVBSArray {
-          new NVBSByte(1),
-          new NVBSByte(1),
-        }
+  private static readonly NVBSMap Map = new() {
+    { "Test", new NVBSString("value") },
+    { "Test2", new NVBSInt(1) }, {
+      "TestMap", new NVBSMap {
+        { "Test", new NVBSString("value") },
+        { "Test2", new NVBSInt(2) }, {
+          "Test3", (NVBSArray)new NVBSByte[] {
+            1, 2, 3, 4, 5
+          }
+        }, {
+          "Test4", (NVBSArray)new NVBSInt[] {
+            1, 2, 3, 4, 5
+          }
+        },
       }
-    } }
+    }
   };
+
   [SetUp]
   public void Setup() {
-
   }
 
   [Test]
@@ -34,13 +38,13 @@ public class NVBSTests {
 
   [Test]
   public void CheckMemoryValues() {
-    Assert.IsTrue(Map.Keys.Contains("Test"));
-    Assert.IsTrue(Map.Keys.Contains("Test2"));
-    Assert.IsTrue(Map.Keys.Contains("TestMap"));
+    Assert.IsTrue(Map.ContainsKey("Test"));
+    Assert.IsTrue(Map.ContainsKey("Test2"));
+    Assert.IsTrue(Map.ContainsKey("TestMap"));
     Assert.That(Map["Test"].AsString(), Is.EqualTo("value"));
-    Assert.That(Map["Test2"].AsInt(), Is.EqualTo(1)); 
+    Assert.That(Map["Test2"].AsInt(), Is.EqualTo(1));
     Assert.That(Map["TestMap"].AsMap()["Test"].AsString(), Is.EqualTo("value"));
     Assert.That(Map["TestMap"].AsMap()["Test2"].AsInt(), Is.EqualTo(2));
+    Assert.That(Map["TestMap"].AsMap()["Test4"].AsArray()[0].AsInt(), Is.EqualTo(1));
   }
-  
 }

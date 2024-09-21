@@ -5,10 +5,10 @@ namespace NVBS
 {
 	public class NVBSReader
 	{
-		private readonly BinaryReader Reader;
+		private readonly BinaryReader _reader;
 		public NVBSReader(BinaryReader reader)
 		{
-			Reader = reader;
+			_reader = reader;
 			//Reader.ReadByte();
 		}
 
@@ -16,60 +16,58 @@ namespace NVBS
 		{
 			return (NVBSMap)Read(NVBSTypes.Map);
 		}
-		//Read Type then devide how to read it
+		//Read Type then decide how to read it
 		private NVBSObject Read(NVBSTypes type)
 		{
 			switch (type) {
 				case NVBSTypes.String:
-					return readString();
+					return ReadString();
 				case NVBSTypes.Array:
-					return readArray();
+					return ReadArray();
 				case NVBSTypes.Map:
-					return readMap();
+					return ReadMap();
 				case NVBSTypes.Byte:
-					return new NVBSByte(Reader.ReadByte());
+					return new NVBSByte(_reader.ReadByte());
 				case NVBSTypes.Short:
-					return new NVBSShort(Reader.ReadInt16());
+					return new NVBSShort(_reader.ReadInt16());
 				case NVBSTypes.Double:
-					return new NVBSDouble(Reader.ReadDouble());
+					return new NVBSDouble(_reader.ReadDouble());
 				case NVBSTypes.Float:
-					return new NVBSFloat(Reader.ReadSingle());
+					return new NVBSFloat(_reader.ReadSingle());
 				case NVBSTypes.Long:
-					return new NVBSLong(Reader.ReadInt64());
+					return new NVBSLong(_reader.ReadInt64());
 				case NVBSTypes.Int:
-					return new NVBSInt(Reader.ReadInt32());
-				default: {
-					Console.WriteLine("Unknown type: " + type);
-					return null;
+					return new NVBSInt(_reader.ReadInt32());
+				default: { 
+					throw new InvalidOperationException("Invalid Type");
 				}
 			}
 		}
 		//Read Map Type	
-		private NVBSMap readMap()
+		private NVBSMap ReadMap()
 		{
 			var map = new NVBSMap();
 			while (true)
 			{
-				NVBSTypes type = (NVBSTypes)Reader.ReadByte();
+				NVBSTypes type = (NVBSTypes)_reader.ReadByte();
 				if (type == NVBSTypes.End) break;
-				string name = Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadUInt16()));
+				string name = Encoding.UTF8.GetString(_reader.ReadBytes(_reader.ReadUInt16()));
 				NVBSObject value = Read(type);
-				if (value == null) break;
 				map.Add(name,value);
 			}
 			return map;
 		}
 		//read String Type
-		private NVBSString readString()
+		private NVBSString ReadString()
 		{
-			return new NVBSString(Encoding.UTF8.GetString(Reader.ReadBytes(Reader.ReadUInt16())));
+			return new NVBSString(Encoding.UTF8.GetString(_reader.ReadBytes(_reader.ReadUInt16())));
 		}
 		//Read Array Type
-		private NVBSArray readArray()
+		private NVBSArray ReadArray()
 		{
-			NVBSArray array = new NVBSArray();
-			NVBSTypes type = (NVBSTypes)Reader.ReadByte();
-			ushort count = Reader.ReadUInt16();
+			NVBSArray array = new NVBSArray(Array.Empty<NVBSObject>());
+			NVBSTypes type = (NVBSTypes)_reader.ReadByte();
+			ushort count = _reader.ReadUInt16();
 			
 			for (short i = 0; i < count; i++) {
 				array.Add(Read(type));

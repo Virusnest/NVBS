@@ -14,17 +14,19 @@ namespace NVBS.Structure
 			_data.Add(item);
 		}
 
-		public NVBSArray(params NVBSObject[] array) {
-			NVBSObject first = array.First();
-			foreach (var item in array)
-			{
-				if(item.Type != first.Type)
-				{
-					throw new Exception("All items in an array must be of the same type");
-				}
-				Add(item);
+		public NVBSArray(NVBSObject[] array) {
+			if (array.Length == 0) return;
+
+				_data.AddRange(array);
 				
-			}
+		}
+		
+		public static implicit operator NVBSArray(NVBSObject[] array) {
+			return new NVBSArray(array);
+		}
+		
+		public static implicit operator NVBSObject[](NVBSArray array) {
+			return array._data.ToArray();
 		}
 
 		public void Clear() { _data.Clear(); }
@@ -52,6 +54,8 @@ namespace NVBS.Structure
 		{
 			return _data.GetEnumerator();
 		}
+		
+		public NVBSObject this[int index] => _data[index];
 	}
 }
 

@@ -25,6 +25,11 @@ namespace NVBS.Structure
 		public override string ToString() {
 			return Data.ToString();
 		}
+		
+		public static implicit operator NVBSInt(int value)
+		{
+			return new NVBSInt(value);
+		}
 	}
 }
 

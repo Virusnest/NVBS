@@ -5,66 +5,66 @@ namespace NVBS
 {
 	public class NVBSWriter
 	{
-		private readonly BinaryWriter Writer;
+		private readonly BinaryWriter _writer;
 		public NVBSWriter(BinaryWriter writer)
 		{
-			Writer = writer;
+			_writer = writer;
 		}
-		//Write Type then devide how to write it
+		//Write Type then decide how to write it
 		public void Write(NVBSObject obj) {
 			switch (obj.Type) {
 				case NVBSTypes.String:
-					writeString((NVBSString)obj);
+					WriteString((NVBSString)obj);
 					break;
 				case NVBSTypes.Array:
-					writeArray((NVBSArray)obj, (byte)((NVBSArray)obj).First().Type);
+					WriteArray((NVBSArray)obj, (byte)((NVBSArray)obj).First().Type);
 					break;
 				case NVBSTypes.Map:
-					writeMap((NVBSMap)obj);
+					WriteMap((NVBSMap)obj);
 					break;
 				case NVBSTypes.Byte:
-					Writer.Write(((NVBSByte)obj).Data);
+					_writer.Write(((NVBSByte)obj).Data);
 					break;
 				case NVBSTypes.Short:
-					Writer.Write(((NVBSShort)obj).Data);
+					_writer.Write(((NVBSShort)obj).Data);
 					break;
 				case NVBSTypes.Double:
-					Writer.Write(((NVBSDouble)obj).Data);
+					_writer.Write(((NVBSDouble)obj).Data);
 					break;
 				case NVBSTypes.Float:
-					Writer.Write(((NVBSFloat)obj).Data);
+					_writer.Write(((NVBSFloat)obj).Data);
 					break;
 				case NVBSTypes.Long:
-					Writer.Write(((NVBSLong)obj).Data);
+					_writer.Write(((NVBSLong)obj).Data);
 					break;
 				case NVBSTypes.Int:
-					Writer.Write(((NVBSInt)obj).Data);
+					_writer.Write(((NVBSInt)obj).Data);
 					break;
 			}
 
 		}
 		//Write Map Type
-		private void writeMap(NVBSMap obj)
+		private void WriteMap(NVBSMap obj)
 		{
 			foreach(var item in obj) {
-				Writer.Write((byte)item.Value.Type);
-				Writer.Write((ushort)item.Key.Length);
-				Writer.Write(Encoding.UTF8.GetBytes(item.Key));
+				_writer.Write((byte)item.Value.Type);
+				_writer.Write((ushort)item.Key.Length);
+				_writer.Write(Encoding.UTF8.GetBytes(item.Key));
 				Write(item.Value);
 			}
-			Writer.Write((byte)NVBSTypes.End);
+			_writer.Write((byte)NVBSTypes.End);
 		}
 		//Write String Type
-		private void writeString(NVBSString obj)
+		private void WriteString(NVBSString obj)
 		{
-			Writer.Write((ushort)obj.Data.Length);
-			Writer.Write(Encoding.UTF8.GetBytes(obj.Data));
+			_writer.Write((ushort)obj.Data.Length);
+			_writer.Write(Encoding.UTF8.GetBytes(obj.Data));
 		}
 		//Write Array Type
-		private void writeArray(NVBSArray obj, byte type)
+		private void WriteArray(NVBSArray obj, byte type)
 		{
-			Writer.Write(type);
-			Writer.Write((ushort)obj.Count);
+			_writer.Write(type);
+			_writer.Write((ushort)obj.Count);
 			foreach (var item in obj) {
 				Write(item);
 			}
