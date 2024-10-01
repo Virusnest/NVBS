@@ -10,6 +10,10 @@ namespace NVBS.Structure
 		{
 			return new NVBSByte(value);
 		}
+		public static implicit operator NVBSByte(bool value)
+		{
+			return new NVBSByte(value ? (byte)1 : (byte)0);
+		}
 
 		public NVBSByte(byte data)
 		{

@@ -4,11 +4,6 @@ namespace NVBS.Structure
 	public abstract class NVBSObject
 	{
 		public abstract NVBSTypes Type { get; }
-
-		protected NVBSObject()
-		{
-		}
-
 		public string AsString() {
 			if (!(this is NVBSString)) {
 				throw new InvalidOperationException("Object is not a string");
@@ -35,6 +30,13 @@ namespace NVBS.Structure
 				throw new InvalidOperationException("Object is not a byte");
 			}
 			return ((NVBSByte)this).Data;
+		}
+		
+		public bool AsBool() {
+			if (!(this is NVBSByte)) {
+				throw new InvalidOperationException("Object is not a byte");
+			}
+			return ((NVBSByte)this).Data != 0;
 		}
 		
 		public int AsInt() {
